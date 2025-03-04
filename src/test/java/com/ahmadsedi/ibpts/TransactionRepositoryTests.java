@@ -5,8 +5,8 @@ import com.ahmadsedi.ibpts.data.entity.TransactionEntity;
 import com.ahmadsedi.ibpts.data.entity.TransactionType;
 import com.ahmadsedi.ibpts.data.repo.AccountRepository;
 import com.ahmadsedi.ibpts.data.repo.TransactionRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -42,7 +42,6 @@ public class TransactionRepositoryTests {
 
     @BeforeEach
     void setupDb() {
-        transactionRepository.deleteAll();
         accountEntity = new AccountEntity();
         accountEntity.setBalance(10);
         accountEntity = accountRepository.save(accountEntity);
@@ -52,6 +51,11 @@ public class TransactionRepositoryTests {
         entity.setAccountEntity(accountEntity);
         savedEntity = transactionRepository.save(entity);
         assertEqualsTransaction(entity, savedEntity);
+    }
+
+    @AfterEach
+    void clearData(){
+        transactionRepository.deleteAll();
     }
 
 

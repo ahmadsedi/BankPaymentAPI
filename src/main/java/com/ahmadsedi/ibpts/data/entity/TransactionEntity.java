@@ -37,6 +37,6 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    AccountEntity accountEntity;
+    private AccountEntity accountEntity;
 
 }

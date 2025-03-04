@@ -2,6 +2,7 @@ package com.ahmadsedi.ibpts;
 
 import com.ahmadsedi.ibpts.data.entity.AccountEntity;
 import com.ahmadsedi.ibpts.data.repo.AccountRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class AccountRepositoryTests {
         entity.setBalance(5);
         savedEntity = accountRepository.save(entity);
         assertEqualsAccount(entity, savedEntity);
+    }
+
+    @AfterEach
+    void clearData(){
+        accountRepository.deleteAll();
     }
 
     @Test
