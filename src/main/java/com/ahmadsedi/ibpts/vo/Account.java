@@ -3,7 +3,7 @@ package com.ahmadsedi.ibpts.vo;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Positive;
+import jakarta.validation.constraints.Positive;
 
 /**
  * The {@code AccountCreationRequest} represents a request for account creation.
