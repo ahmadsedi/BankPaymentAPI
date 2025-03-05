@@ -3,6 +3,8 @@ package com.ahmadsedi.ibpts.vo;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Positive;
+
 /**
  * The {@code TransferRequest} represents a transfer request.
  *
@@ -16,5 +18,9 @@ import lombok.Setter;
 public class TransferRequest {
     int sourceAccountId;
     int destAccountId;
+
+    @Positive(
+            message = "The amount must be greater than zero."
+    )
     double amount;
 }

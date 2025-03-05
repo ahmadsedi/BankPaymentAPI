@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 /**
  * The {@code AccountEndpoint} interface defines the exposed restful services in the account bounded context.
  * It includes endpoints to create an account, query an account for balance, transfer money between internal bank
@@ -27,14 +29,14 @@ public interface AccountEndpoint {
      *   -H "Content-Type: application/json" --data \
      *   '{"balance":50}'
      *
-     * @param accountCreationRequest A JSON representation of the new account
+     * @param account A JSON representation of the new account
      * @return A JSON representation of the newly created account
      */
     @PostMapping(
             value    = "/accounts",
             consumes = "application/json",
             produces = "application/json")
-    Mono<AccountCreationResponse> createAccount(@RequestBody AccountCreationRequest accountCreationRequest);
+    Mono<Account> createAccount(@Valid @RequestBody Account account);
 
     /**
      * Sample usage, see below.
@@ -50,7 +52,7 @@ public interface AccountEndpoint {
             value    = "/accounts/transfer",
             consumes = "application/json",
             produces = "application/json")
-    Mono<TransferResponse> transfer(@RequestBody TransferRequest transferRequest);
+    Mono<TransferResponse> transfer(@Valid @RequestBody TransferRequest transferRequest);
 
 
     /**

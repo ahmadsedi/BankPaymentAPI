@@ -46,20 +46,21 @@ public class AccountEndpointImpl implements AccountEndpoint {
     }
 
     @Override
-    public Mono<AccountCreationResponse> createAccount(AccountCreationRequest accountCreationRequest) {
-        return Mono.fromCallable(() -> internalCreateAccount(accountCreationRequest))
+    public Mono<Account> createAccount(Account account) {
+        return Mono.fromCallable(() -> internalCreateAccount(account))
                 .subscribeOn(jdbcScheduler);
     }
 
-    private AccountCreationResponse internalCreateAccount(AccountCreationRequest accountCreationRequest) {
-        if(accountCreationRequest.getBalance()<0){
-            throw new InvalidBalanceException("Balance can not be negative:"+accountCreationRequest.getBalance());
+    private Account internalCreateAccount(Account account) {
+        if(account.getBalance()<0){
+            throw new InvalidBalanceException("Balance can not be negative:"+ account.getBalance());
         }
-        AccountEntity entity = accountMapper.apiToEntity(accountCreationRequest);
+        AccountEntity entity = accountMapper.apiToEntity(account);
         AccountEntity newEntity = databaseAccountService.createAccount(entity);
 
-        LOG.debug("createAccount: created a account entity with balance: {}", accountCreationRequest.getBalance());
-        return accountMapper.entityToApi(newEntity);
+        Account newAccount = accountMapper.entityToApi(newEntity);
+        LOG.debug("createAccount: created a account entity with balance: {}", account.getBalance());
+        return newAccount;
     }
 
     @Override

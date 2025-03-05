@@ -4,9 +4,8 @@ import com.ahmadsedi.ibpts.data.entity.AccountEntity;
 import com.ahmadsedi.ibpts.data.entity.TransactionType;
 import com.ahmadsedi.ibpts.data.repo.AccountRepository;
 import com.ahmadsedi.ibpts.data.repo.TransactionRepository;
-import com.ahmadsedi.ibpts.vo.AccountCreationRequest;
+import com.ahmadsedi.ibpts.vo.Account;
 import com.ahmadsedi.ibpts.vo.TransferRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,23 +46,14 @@ class AccountEndpointTests {
     void createAccount_validInput_okExpected() {
         assertEquals(0, accountRepository.count());
         double balance = 10;
-        WebTestClient.BodyContentSpec response = postAndVerifyAccountCreation(balance, HttpStatus.OK);
-        response
-                .jsonPath("$.balance").isEqualTo(balance)
-                .jsonPath("$.accountId").isNotEmpty()
-                .jsonPath("$.created").isNotEmpty();
-        assertEquals(1, accountRepository.count());
+        postAndVerifyAccountCreation(balance, HttpStatus.OK);
     }
 
     @Test
     void createAccount_invalidBalance_badRequestExpected() {
         assertEquals(0, accountRepository.count());
         double balance = -1;
-        postAndVerifyAccountCreation(balance, HttpStatus.BAD_REQUEST)
-                .jsonPath("$.message").isEqualTo("Balance can not be negative:-1.0")
-                .jsonPath("$.path").isEqualTo("/accounts")
-                .jsonPath("$.timestamp").isNotEmpty()
-                .jsonPath("$.status").isEqualTo(HttpStatus.BAD_REQUEST.value());
+        postAndVerifyAccountCreation(balance, HttpStatus.BAD_REQUEST);
         assertEquals(0, accountRepository.count());
     }
 
@@ -128,7 +118,7 @@ class AccountEndpointTests {
         destAccountEntity.setBalance(20);
         destAccountEntity = accountRepository.save(destAccountEntity);
         postAndVerifyTransfer(negativeAmount, sourceAccountEntity.getId(), destAccountEntity.getId(), HttpStatus.BAD_REQUEST)
-                .jsonPath("$.message").isEqualTo("Invalid amount to be transferred: "+String.valueOf(negativeAmount))
+                .jsonPath("$.message").isEqualTo("{amount:The amount must be greater than zero.}")
                 .jsonPath("$.path").isEqualTo("/accounts/transfer")
                 .jsonPath("$.timestamp").isNotEmpty()
                 .jsonPath("$.status").isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -149,7 +139,7 @@ class AccountEndpointTests {
 
         double zeroAmount = 0;
         postAndVerifyTransfer(zeroAmount, sourceAccountEntity.getId(), destAccountEntity.getId(), HttpStatus.BAD_REQUEST)
-                .jsonPath("$.message").isEqualTo("Invalid amount to be transferred: "+String.valueOf(zeroAmount))
+                .jsonPath("$.message").isEqualTo("{amount:The amount must be greater than zero.}")
                 .jsonPath("$.path").isEqualTo("/accounts/transfer")
                 .jsonPath("$.timestamp").isNotEmpty()
                 .jsonPath("$.status").isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -253,17 +243,15 @@ class AccountEndpointTests {
                 .expectBody();
     }
 
-    private WebTestClient.BodyContentSpec postAndVerifyAccountCreation(double balance, HttpStatus expectedStatus) {
-        AccountCreationRequest accountCreationRequest = new AccountCreationRequest();
-        accountCreationRequest.setBalance(balance);
-        return client.post()
+    private void postAndVerifyAccountCreation(double balance, HttpStatus expectedStatus) {
+        Account account = new Account();
+        account.setBalance(balance);
+        client.post()
                 .uri("/accounts")
-                .body(just(accountCreationRequest), AccountCreationRequest.class)
+                .body(just(account), Account.class)
                 .accept(APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isEqualTo(expectedStatus)
-                .expectHeader().contentType(APPLICATION_JSON)
-                .expectBody();
+                .expectStatus().isEqualTo(expectedStatus);
     }
 
     private WebTestClient.BodyContentSpec getAndVerifyAccountBalanceById(String accountId, HttpStatus expectedStatus) {

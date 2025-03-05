@@ -3,6 +3,8 @@ package com.ahmadsedi.ibpts.vo;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Positive;
+
 /**
  * The {@code AccountCreationRequest} represents a request for account creation.
  *
@@ -13,6 +15,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccountCreationRequest {
+public class Account {
+    @Positive(
+            message = "The balance must be greater than zero."
+    )
     private double balance;
+    private int accountId;
+    private String created;
 }

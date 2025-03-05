@@ -8,7 +8,6 @@ import com.ahmadsedi.ibpts.data.repo.AccountRepository;
 import com.ahmadsedi.ibpts.data.repo.TransactionRepository;
 import com.ahmadsedi.ibpts.exceptions.InvalidAccountDetailsException;
 import com.ahmadsedi.ibpts.exceptions.InsufficientFundsException;
-import com.ahmadsedi.ibpts.exceptions.InvalidTransferException;
 import com.ahmadsedi.ibpts.vo.TransferRequest;
 import com.ahmadsedi.ibpts.vo.TransferResponse;
 import org.springframework.stereotype.Service;
@@ -53,9 +52,6 @@ public class DatabaseAccountService implements AccountService{
     @Transactional
     public TransferResponse transfer(TransferRequest transferRequest) {
 
-        if(transferRequest.getAmount()<=0){
-            throw new InvalidTransferException("Invalid amount to be transferred: "+transferRequest.getAmount());
-        }
         AccountEntity sourceAccountEntity = accountRepository.findById(transferRequest.getSourceAccountId()).
                 orElseThrow(()->new InvalidAccountDetailsException("No account found with accountId: " + transferRequest.getSourceAccountId()));
         AccountEntity destAccountEntity = accountRepository.findById(transferRequest.getDestAccountId()).

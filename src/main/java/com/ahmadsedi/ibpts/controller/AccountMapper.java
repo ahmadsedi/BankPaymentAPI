@@ -1,8 +1,7 @@
 package com.ahmadsedi.ibpts.controller;
 
 import com.ahmadsedi.ibpts.data.entity.AccountEntity;
-import com.ahmadsedi.ibpts.vo.AccountCreationRequest;
-import com.ahmadsedi.ibpts.vo.AccountCreationResponse;
+import com.ahmadsedi.ibpts.vo.Account;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,14 +19,17 @@ public class AccountMapper {
      * Converts {@code AccountCreationRequest} which represents a HTTP request for account creation to
      * {@code AccountEntity} to be processed in business classes.
      *
-     * @param accountCreationRequest represents the account to be created.
+     * @param account represents the account to be created.
      * @return the corresponding AccountEntity to the request.
      */
-    public AccountEntity apiToEntity(AccountCreationRequest accountCreationRequest) {
+    public AccountEntity apiToEntity(Account account) {
         AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setBalance(accountCreationRequest.getBalance());
+        accountEntity.setBalance(account.getBalance());
         return accountEntity;
     }
+
+
+
 
     /**
      * Converts {@code AccountEntity} which represents the account creation to
@@ -36,8 +38,9 @@ public class AccountMapper {
      * @param accountEntity represents the account which has been created.
      * @return the corresponding AccountCreationResponse to created account object.
      */
-    public AccountCreationResponse entityToApi(AccountEntity accountEntity) {
-        AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
+
+    public Account entityToApi(AccountEntity accountEntity) {
+        Account accountCreationResponse = new Account();
         accountCreationResponse.setBalance(accountEntity.getBalance());
         accountCreationResponse.setCreated(accountEntity.getCreated().toString());
         accountCreationResponse.setAccountId(accountEntity.getId());
