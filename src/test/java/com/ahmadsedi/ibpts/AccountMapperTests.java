@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  * Time: 16:12
  */
 
-public class AccountMapperTests {
+class AccountMapperTests {
 
     AccountMapper accountMapper = new AccountMapper();
 

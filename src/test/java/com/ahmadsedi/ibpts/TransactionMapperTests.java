@@ -16,12 +16,12 @@ import java.util.Date;
  * Time: 16:28
  */
 
-public class TransactionMapperTests {
+class TransactionMapperTests {
 
     TransactionMapper transactionMapper = new TransactionMapper();
 
     @Test
-    public void entityToApiTest(){
+    void entityToApiTest(){
         TransactionEntity entity = new TransactionEntity();
         entity.setAmount(10);
         entity.setCreated(new Date());
