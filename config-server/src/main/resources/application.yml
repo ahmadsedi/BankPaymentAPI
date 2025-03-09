@@ -13,7 +13,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/ahmadsedi/BankPaymentAPI/configs/payment-api.yml
+          uri: https://github.com/ahmadsedi/PaymentApiConfig
           default-label: main
           timeout: 5
           clone-on-start: true

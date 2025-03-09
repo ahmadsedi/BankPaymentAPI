@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
@@ -27,6 +28,7 @@ import reactor.core.scheduler.Schedulers;
  */
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class IntraBankPaymentTransferSystemApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IntraBankPaymentTransferSystemApplication.class);

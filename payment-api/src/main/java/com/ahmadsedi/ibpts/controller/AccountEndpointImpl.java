@@ -1,5 +1,6 @@
 package com.ahmadsedi.ibpts.controller;
 
+import com.ahmadsedi.ibpts.config.FraudProperties;
 import com.ahmadsedi.ibpts.exceptions.InvalidAccountDetailsException;
 import com.ahmadsedi.ibpts.data.entity.AccountEntity;
 import com.ahmadsedi.ibpts.exceptions.InvalidBalanceException;
@@ -34,27 +35,27 @@ public class AccountEndpointImpl implements AccountEndpoint {
     private final TransactionMapper transactionMapper;
     private final DatabaseAccountService databaseAccountService;
 
+    private final FraudProperties fraudProperties;
     private final Scheduler jdbcScheduler;
 
     public AccountEndpointImpl(AccountMapper accountMapper, TransactionMapper transactionMapper,
                                DatabaseAccountService databaseAccountService,
-                               @Qualifier("jdbcScheduler") Scheduler jdbcScheduler) {
+                               FraudProperties fraudProperties, @Qualifier("jdbcScheduler") Scheduler jdbcScheduler) {
         this.accountMapper = accountMapper;
         this.transactionMapper = transactionMapper;
         this.databaseAccountService = databaseAccountService;
+        this.fraudProperties = fraudProperties;
         this.jdbcScheduler = jdbcScheduler;
     }
 
     @Override
     public Mono<Account> createAccount(Account account) {
+        LOG.error("Fraud Detection: "+fraudProperties.isDetection());
         return Mono.fromCallable(() -> internalCreateAccount(account))
                 .subscribeOn(jdbcScheduler);
     }
 
     private Account internalCreateAccount(Account account) {
-        if(account.getBalance()<0){
-            throw new InvalidBalanceException("Balance can not be negative:"+ account.getBalance());
-        }
         AccountEntity entity = accountMapper.apiToEntity(account);
         AccountEntity newEntity = databaseAccountService.createAccount(entity);
 
