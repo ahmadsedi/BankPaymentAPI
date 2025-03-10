@@ -1,0 +1,15 @@
+version: '2.1'
+
+services:
+  payment-api:
+    build: payment-api
+    mem_limit: 512m
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  config-server:
+    build: config-server
+    mem_limit: 512m
+    ports:
+      - "8888:8888"

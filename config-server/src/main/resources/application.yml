@@ -6,6 +6,14 @@ server:
     threads:
       max: 50
       min-spare: 5
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, refresh
 spring:
   application:
     name: config-service
